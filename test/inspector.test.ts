@@ -213,12 +213,34 @@ test("format() preserves existing comments when provided", () => {
     assets: { images: [], fonts: [], audio: [] },
   };
   const existingComments = "\nUse this on the path. Connect mainColor to DS.\n";
-  const output = format(stubMeta, existingComments);
+  const output = format(stubMeta, { existingComments });
 
   assert.ok(
     output.includes("## Comments\nUse this on the path."),
     `expected preserved comment text in output, got:\n${output}`
   );
+});
+
+test("format() includes webPreview in frontmatter after file when provided", () => {
+  const stubMeta = {
+    file: "stub.riv",
+    fileId: null,
+    format: "7.0",
+    artboards: [],
+    viewModels: [],
+    enums: [],
+    assets: { images: [], fonts: [], audio: [] },
+  };
+  const output = format(stubMeta, { webPreview: "https://rive.app/community/files/123" });
+
+  assert.ok(
+    output.includes(`webPreview: "https://rive.app/community/files/123"`),
+    `expected webPreview in output, got:\n${output}`
+  );
+  // webPreview should appear right after the file line
+  const fileIdx = output.indexOf("file:");
+  const previewIdx = output.indexOf("webPreview:");
+  assert.ok(previewIdx > fileIdx, "webPreview should appear after file in frontmatter");
 });
 
 // ─── Always runs ──────────────────────────────────────────────────────────────

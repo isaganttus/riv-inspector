@@ -33,10 +33,11 @@ function yamlPropLine(prop: PropertyMeta): string {
   return line;
 }
 
-function buildYamlFrontmatter(meta: RivMetadata): string {
+function buildYamlFrontmatter(meta: RivMetadata, webPreview?: string): string {
   const lines: string[] = ["---"];
 
   lines.push(`file: ${yamlString(meta.file)}`);
+  if (webPreview) lines.push(`webPreview: ${yamlString(webPreview)}`);
   if (meta.fileId !== null) lines.push(`fileId: ${meta.fileId}`);
   if (meta.format) lines.push(`format: "${meta.format}"`);
 
@@ -102,10 +103,16 @@ function buildYamlFrontmatter(meta: RivMetadata): string {
   return lines.join("\n");
 }
 
-export function format(meta: RivMetadata, existingComments?: string): string {
+export interface FormatOptions {
+  existingComments?: string;
+  webPreview?: string;
+}
+
+export function format(meta: RivMetadata, options?: FormatOptions): string {
+  const { existingComments, webPreview } = options ?? {};
   const commentsSection =
     existingComments !== undefined
       ? `## Comments${existingComments}`
       : "## Comments\n";
-  return buildYamlFrontmatter(meta) + "\n\n" + commentsSection;
+  return buildYamlFrontmatter(meta, webPreview) + "\n\n" + commentsSection;
 }

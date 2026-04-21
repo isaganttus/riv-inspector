@@ -16,15 +16,17 @@ Usage:
   riv-inspector <file.riv> [file2.riv ...] [options]
 
 Options:
-  --output, -o <path>  Output path for the .md file (single file only)
-  --stdout, -s         Print output to stdout instead of writing a file (single file only)
-  --version, -v        Print version and exit
-  --help, -h           Show this help message
+  --output, -o <path>   Output path for the .md file (single file only)
+  --stdout, -s          Print output to stdout instead of writing a file (single file only)
+  --web-preview, -w <url>  Add a webPreview URL to the frontmatter (single file only)
+  --version, -v         Print version and exit
+  --help, -h            Show this help message
 
 Examples:
   riv-inspector animation.riv
   riv-inspector animation.riv -o docs/animation.md
   riv-inspector animation.riv --stdout
+  riv-inspector animation.riv --web-preview https://rive.app/community/files/123
   riv-inspector a.riv b.riv c.riv
 `);
 }
@@ -42,7 +44,8 @@ function readExistingComments(mdPath: string): string | undefined {
 async function inspectOne(
   rivPath: string,
   outputPath: string | null,
-  toStdout: boolean
+  toStdout: boolean,
+  webPreview?: string
 ): Promise<void> {
   const fullPath = resolve(rivPath);
 
@@ -60,7 +63,7 @@ async function inspectOne(
 
   const metadata = await inspect(fullPath);
   const existingComments = toStdout ? undefined : readExistingComments(resolvedOutput);
-  const markdown = format(metadata, existingComments);
+  const markdown = format(metadata, { existingComments, webPreview });
 
   if (toStdout) {
     process.stdout.write(markdown);
@@ -86,12 +89,15 @@ async function main() {
   const rivPaths: string[] = [];
   let outputPath: string | null = null;
   let toStdout = false;
+  let webPreview: string | undefined;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--output" || args[i] === "-o") {
       outputPath = args[++i];
     } else if (args[i] === "--stdout" || args[i] === "-s") {
       toStdout = true;
+    } else if (args[i] === "--web-preview" || args[i] === "-w") {
+      webPreview = args[++i];
     } else if (!args[i].startsWith("-")) {
       rivPaths.push(args[i]);
     }
@@ -113,9 +119,14 @@ async function main() {
     process.exit(1);
   }
 
+  if (rivPaths.length > 1 && webPreview) {
+    console.error("Error: --web-preview cannot be used with multiple input files.");
+    process.exit(1);
+  }
+
   try {
     for (const rivPath of rivPaths) {
-      await inspectOne(rivPath, outputPath, toStdout);
+      await inspectOne(rivPath, outputPath, toStdout, webPreview);
     }
   } catch (err) {
     console.error("Error:", err instanceof Error ? err.message : err);
