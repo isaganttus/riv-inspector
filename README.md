@@ -111,10 +111,10 @@ riv-inspector --version
 |---|---|
 | `name` | Artboard name |
 | `size` | `[width, height]` in pixels |
-| `origin` | `[x%, y%]` position of the (0,0) anchor as a percentage of the artboard dimensions |
+| `origin` | `[x, y]` normalized position of the (0,0) anchor (0.0–1.0) |
 | `stateMachines` | Names of all state machines on this artboard |
 
-**Origin notes:** `[0, 0]` means the origin is at the top-left corner. `[50, 50]` means it is centered. `[100, 100]` means it is at the bottom-right corner.
+**Origin notes:** `[0, 0]` means the origin is at the top-left corner. `[0.5, 0.5]` means it is centered. `[1, 1]` means it is at the bottom-right corner.
 
 ### View Models
 
