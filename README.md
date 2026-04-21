@@ -111,10 +111,10 @@ riv-inspector --version
 |---|---|
 | `name` | Artboard name |
 | `size` | `[width, height]` in pixels |
-| `origin` | `[x, y]` position of the (0,0) anchor within the artboard frame |
+| `origin` | `[x%, y%]` position of the (0,0) anchor as a percentage of the artboard dimensions |
 | `stateMachines` | Names of all state machines on this artboard |
 
-**Origin notes:** `[0, 0]` means the origin is pinned to the top-left corner (Rive's default "Frame Origin" mode). A value like `[366, 377]` means the origin sits at the center of a 732×755 artboard.
+**Origin notes:** `[0, 0]` means the origin is at the top-left corner. `[50, 50]` means it is centered. `[100, 100]` means it is at the bottom-right corner.
 
 ### View Models
 

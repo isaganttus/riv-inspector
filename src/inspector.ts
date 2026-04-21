@@ -204,9 +204,9 @@ export async function inspect(rivFilePath: string): Promise<RivMetadata> {
       const bounds = artboard.bounds;
       width = Math.round(bounds.maxX - bounds.minX);
       height = Math.round(bounds.maxY - bounds.minY);
-      // Origin is where (0,0) sits within the artboard frame (from top-left)
-      originX = Math.round(-bounds.minX);
-      originY = Math.round(-bounds.minY);
+      // Origin as a percentage of the artboard dimensions (0–100)
+      originX = width > 0 ? Math.round((-bounds.minX / width) * 100) : 0;
+      originY = height > 0 ? Math.round((-bounds.minY / height) * 100) : 0;
     } catch {
       try {
         width = Math.round(artboard.width);

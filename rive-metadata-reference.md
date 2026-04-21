@@ -12,7 +12,7 @@ What can be read from a `.riv` file via the `@rive-app/canvas-advanced` WASM run
 |---|---|---|
 | `name` | `artboard.name` | |
 | `size` | `artboard.bounds` → `maxX - minX`, `maxY - minY` | In pixels |
-| `origin` | `artboard.bounds` → `-minX`, `-minY` | Position of (0,0) anchor within the artboard frame |
+| `origin` | `artboard.bounds` → `(-minX / width) * 100`, `(-minY / height) * 100` | Origin as a percentage of artboard dimensions (e.g. `[50, 50]` = centered) |
 | `stateMachines` | `artboard.stateMachineByIndex(i).name` | Names of all state machines |
 
 ### View Model
