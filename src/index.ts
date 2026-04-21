@@ -16,17 +16,19 @@ Usage:
   riv-inspector <file.riv> [file2.riv ...] [options]
 
 Options:
-  --output, -o <path>   Output path for the .md file (single file only)
-  --stdout, -s          Print output to stdout instead of writing a file (single file only)
+  --output, -o <path>      Output path for the .md file (single file only)
+  --stdout, -s             Print output to stdout instead of writing a file (single file only)
   --web-preview, -w <url>  Add a webPreview URL to the frontmatter (single file only)
-  --version, -v         Print version and exit
-  --help, -h            Show this help message
+  --editor-link, -e <url>  Add an editorLink URL to the frontmatter (single file only)
+  --version, -v            Print version and exit
+  --help, -h               Show this help message
 
 Examples:
   riv-inspector animation.riv
   riv-inspector animation.riv -o docs/animation.md
   riv-inspector animation.riv --stdout
   riv-inspector animation.riv --web-preview https://rive.app/community/files/123
+  riv-inspector animation.riv --editor-link https://rive.app/editor/123
   riv-inspector a.riv b.riv c.riv
 `);
 }
@@ -45,7 +47,8 @@ async function inspectOne(
   rivPath: string,
   outputPath: string | null,
   toStdout: boolean,
-  webPreview?: string
+  webPreview?: string,
+  editorLink?: string
 ): Promise<void> {
   const fullPath = resolve(rivPath);
 
@@ -63,7 +66,7 @@ async function inspectOne(
 
   const metadata = await inspect(fullPath);
   const existingComments = toStdout ? undefined : readExistingComments(resolvedOutput);
-  const markdown = format(metadata, { existingComments, webPreview });
+  const markdown = format(metadata, { existingComments, webPreview, editorLink });
 
   if (toStdout) {
     process.stdout.write(markdown);
@@ -90,6 +93,7 @@ async function main() {
   let outputPath: string | null = null;
   let toStdout = false;
   let webPreview: string | undefined;
+  let editorLink: string | undefined;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--output" || args[i] === "-o") {
@@ -98,6 +102,8 @@ async function main() {
       toStdout = true;
     } else if (args[i] === "--web-preview" || args[i] === "-w") {
       webPreview = args[++i];
+    } else if (args[i] === "--editor-link" || args[i] === "-e") {
+      editorLink = args[++i];
     } else if (!args[i].startsWith("-")) {
       rivPaths.push(args[i]);
     }
@@ -124,9 +130,14 @@ async function main() {
     process.exit(1);
   }
 
+  if (rivPaths.length > 1 && editorLink) {
+    console.error("Error: --editor-link cannot be used with multiple input files.");
+    process.exit(1);
+  }
+
   try {
     for (const rivPath of rivPaths) {
-      await inspectOne(rivPath, outputPath, toStdout, webPreview);
+      await inspectOne(rivPath, outputPath, toStdout, webPreview, editorLink);
     }
   } catch (err) {
     console.error("Error:", err instanceof Error ? err.message : err);
