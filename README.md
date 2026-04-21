@@ -52,8 +52,8 @@ assets:
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/riv-inspect.git
-cd riv-inspect
+git clone https://github.com/isaganttus/riv-inspector.git
+cd riv-inspector
 npm install
 ```
 

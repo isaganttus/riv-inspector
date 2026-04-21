@@ -1,17 +1,34 @@
 import type { RivMetadata, ArtboardMeta, ViewModelMeta, PropertyMeta } from "./inspector.js";
 
 /**
- * Serialize a value for YAML inline format.
- * Arrays become flow-style [a, b, c], strings are quoted if needed.
+ * Quote a YAML scalar value if it contains characters that would break YAML parsing
+ * or allow content injection (colons, hashes, brackets, newlines, etc.).
+ */
+function yamlString(value: string): string {
+  // Safe: only word chars, spaces, hyphens, dots, forward slashes, parentheses
+  if (/^[\w\s\-\./()]+$/.test(value)) return value;
+  // Escape backslashes, double quotes, and control characters, then wrap in double quotes
+  const escaped = value
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/\t/g, "\\t");
+  return `"${escaped}"`;
+}
+
+/**
+ * Serialize a string array as a YAML flow sequence.
+ * Each element is individually escaped.
  */
 function yamlArray(items: string[]): string {
   if (items.length === 0) return "[]";
-  return `[${items.join(", ")}]`;
+  return `[${items.map(yamlString).join(", ")}]`;
 }
 
 function yamlPropLine(prop: PropertyMeta): string {
-  let line = `{ name: ${prop.name}, type: ${prop.type}`;
-  if (prop.enum) line += `, enum: ${prop.enum}`;
+  let line = `{ name: ${yamlString(prop.name)}, type: ${yamlString(prop.type)}`;
+  if (prop.enum) line += `, enum: ${yamlString(prop.enum)}`;
   line += " }";
   return line;
 }
@@ -19,7 +36,7 @@ function yamlPropLine(prop: PropertyMeta): string {
 function buildYamlFrontmatter(meta: RivMetadata): string {
   const lines: string[] = ["---"];
 
-  lines.push(`file: ${meta.file}`);
+  lines.push(`file: ${yamlString(meta.file)}`);
   if (meta.fileId !== null) lines.push(`fileId: ${meta.fileId}`);
   if (meta.format) lines.push(`format: "${meta.format}"`);
 
@@ -27,7 +44,7 @@ function buildYamlFrontmatter(meta: RivMetadata): string {
   if (meta.artboards.length > 0) {
     lines.push("artboards:");
     for (const ab of meta.artboards) {
-      lines.push(`  - name: ${ab.name}`);
+      lines.push(`  - name: ${yamlString(ab.name)}`);
       lines.push(`    size: ${yamlArray(ab.size.map(String))}`);
       lines.push(`    origin: ${yamlArray(ab.origin.map(String))}`);
       if (ab.stateMachines.length > 0) {
@@ -40,7 +57,7 @@ function buildYamlFrontmatter(meta: RivMetadata): string {
   if (meta.viewModels.length > 0) {
     lines.push("viewModels:");
     for (const vm of meta.viewModels) {
-      lines.push(`  - name: ${vm.name}`);
+      lines.push(`  - name: ${yamlString(vm.name)}`);
       if (vm.properties.length > 0) {
         lines.push("    properties:");
         for (const prop of vm.properties) {
@@ -57,7 +74,7 @@ function buildYamlFrontmatter(meta: RivMetadata): string {
   if (meta.enums.length > 0) {
     lines.push("enums:");
     for (const e of meta.enums) {
-      lines.push(`  - name: ${e.name}`);
+      lines.push(`  - name: ${yamlString(e.name)}`);
       lines.push(`    values: ${yamlArray(e.values)}`);
     }
   }

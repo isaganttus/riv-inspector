@@ -2,7 +2,7 @@
   "name": "riv-inspect",
   "version": "0.1.0",
   "description": "Extract metadata from .riv files as Markdown with YAML frontmatter",
-  "author": "Isadora",
+  "author": "Isa Ganttus",
   "license": "MIT",
   "keywords": [
     "rive",
@@ -14,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/riv-inspect.git"
+    "url": "https://github.com/isaganttus/riv-inspector.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/riv-inspect/issues"
+    "url": "https://github.com/isaganttus/riv-inspector/issues"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/riv-inspect#readme",
+  "homepage": "https://github.com/isaganttus/riv-inspector#readme",
   "type": "module",
   "bin": {
     "riv-inspect": "./dist/index.js"

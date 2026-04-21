@@ -117,6 +117,8 @@ export async function inspect(rivFilePath: string): Promise<RivMetadata> {
     originalLog(...args);
   };
   console.log = suppressLog;
+
+  try {
   // Load the WASM runtime
   const require = createRequire(import.meta.url);
   const canvasAdvancedPath = require.resolve("@rive-app/canvas-advanced");
@@ -221,7 +223,6 @@ export async function inspect(rivFilePath: string): Promise<RivMetadata> {
   // Extract enums (need this before view models so we can reference enum names)
   const fileEnums = file.enums();
   const enumsMeta: EnumMeta[] = [];
-  const enumNamesByType = new Map<string, string>();
 
   for (const dataEnum of fileEnums) {
     enumsMeta.push({
@@ -307,10 +308,11 @@ export async function inspect(rivFilePath: string): Promise<RivMetadata> {
   try { file.unref(); } catch {}
   try { rive.cleanup(); } catch {}
 
-  // Restore console
-  console.error = originalErr;
-  console.warn = originalWarn;
-  console.log = originalLog;
-
   return result;
+  } finally {
+    // Always restore console, even if an error is thrown during parsing
+    console.error = originalErr;
+    console.warn = originalWarn;
+    console.log = originalLog;
+  }
 }
