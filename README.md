@@ -1,9 +1,9 @@
-# rive-inspector
+# riv-inspector
 
 Extract metadata from `.riv` files and write it as Markdown with YAML frontmatter.
 
 ```
-rive-inspector <file.riv> [file2.riv ...] [options]
+riv-inspector <file.riv> [file2.riv ...] [options]
 ```
 
 ---
@@ -52,8 +52,8 @@ assets:
 ## Installation
 
 ```bash
-git clone https://github.com/isaganttus/rive-inspectoror.git
-cd rive-inspectoror
+git clone https://github.com/isaganttus/riv-inspector.git
+cd riv-inspector
 npm install
 ```
 
@@ -75,19 +75,19 @@ npm install -g .
 npm run dev -- path/to/file.riv
 
 # Or using the compiled binary
-rive-inspector path/to/file.riv
+riv-inspector path/to/file.riv
 
 # Specify a custom output path
-rive-inspector path/to/file.riv --output path/to/output.md
+riv-inspector path/to/file.riv --output path/to/output.md
 
 # Print to stdout instead of writing a file
-rive-inspector path/to/file.riv --stdout
+riv-inspector path/to/file.riv --stdout
 
 # Inspect multiple files at once
-rive-inspector a.riv b.riv c.riv
+riv-inspector a.riv b.riv c.riv
 
 # Print version
-rive-inspector --version
+riv-inspector --version
 ```
 
 ---

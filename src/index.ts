@@ -9,10 +9,10 @@ const { version } = require("../package.json") as { version: string };
 
 function usage() {
   console.log(`
-rive-inspector v${version} — Extract metadata from .riv files
+riv-inspector v${version} — Extract metadata from .riv files
 
 Usage:
-  rive-inspector <file.riv> [file2.riv ...] [options]
+  riv-inspector <file.riv> [file2.riv ...] [options]
 
 Options:
   --output, -o <path>  Output path for the .md file (single file only)
@@ -21,10 +21,10 @@ Options:
   --help, -h           Show this help message
 
 Examples:
-  rive-inspector animation.riv
-  rive-inspector animation.riv -o docs/animation.md
-  rive-inspector animation.riv --stdout
-  rive-inspector a.riv b.riv c.riv
+  riv-inspector animation.riv
+  riv-inspector animation.riv -o docs/animation.md
+  riv-inspector animation.riv --stdout
+  riv-inspector a.riv b.riv c.riv
 `);
 }
 
@@ -67,7 +67,7 @@ async function main() {
   }
 
   if (args.includes("--version") || args.includes("-v")) {
-    console.log(`rive-inspector v${version}`);
+    console.log(`riv-inspector v${version}`);
     process.exit(0);
   }
 
