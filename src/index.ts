@@ -46,7 +46,7 @@ async function inspectOne(
 
   const resolvedOutput = outputPath
     ? resolve(outputPath)
-    : join(dirname(fullPath), `${basename(fullPath)}.md`);
+    : join(dirname(fullPath), `${basename(fullPath, ".riv")}.md`);
 
   const metadata = await inspect(fullPath);
   const markdown = format(metadata);
