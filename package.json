@@ -1,0 +1,51 @@
+{
+  "name": "riv-inspect",
+  "version": "0.1.0",
+  "description": "Extract metadata from .riv files as Markdown with YAML frontmatter",
+  "author": "Isadora",
+  "license": "MIT",
+  "keywords": [
+    "rive",
+    "riv",
+    "inspector",
+    "metadata",
+    "cli",
+    "animation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/riv-inspect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/riv-inspect/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/riv-inspect#readme",
+  "type": "module",
+  "bin": {
+    "riv-inspect": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "node --import tsx/esm --test test/inspector.test.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "dependencies": {
+    "@rive-app/canvas-advanced": "^2.37.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.19.2",
+    "typescript": "^6.0.2"
+  }
+}

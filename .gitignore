@@ -1,0 +1,4 @@
+node_modules/
+dist/
+*.riv.md
+test/fixtures/*.riv
