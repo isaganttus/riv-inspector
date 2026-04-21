@@ -102,6 +102,10 @@ function buildYamlFrontmatter(meta: RivMetadata): string {
   return lines.join("\n");
 }
 
-export function format(meta: RivMetadata): string {
-  return buildYamlFrontmatter(meta) + "\n\n## Comments\n";
+export function format(meta: RivMetadata, existingComments?: string): string {
+  const commentsSection =
+    existingComments !== undefined
+      ? `## Comments${existingComments}`
+      : "## Comments\n";
+  return buildYamlFrontmatter(meta) + "\n\n" + commentsSection;
 }

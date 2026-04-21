@@ -193,6 +193,34 @@ describe("with fixture", { skip: !HAS_FIXTURE }, () => {
 
 });
 
+// ─── Comments preservation ────────────────────────────────────────────────────
+
+test("format() outputs an empty ## Comments section when no existing comments are provided", async () => {
+  const meta = await inspect(resolve(dirname(fileURLToPath(import.meta.url)), "fixtures/sample.riv")).catch(() => null);
+  if (!meta) return; // skip if no fixture
+  const output = format(meta);
+  assert.ok(output.endsWith("## Comments\n"), `expected output to end with empty comments section`);
+});
+
+test("format() preserves existing comments when provided", () => {
+  const stubMeta = {
+    file: "stub.riv",
+    fileId: null,
+    format: "7.0",
+    artboards: [],
+    viewModels: [],
+    enums: [],
+    assets: { images: [], fonts: [], audio: [] },
+  };
+  const existingComments = "\nUse this on the path. Connect mainColor to DS.\n";
+  const output = format(stubMeta, existingComments);
+
+  assert.ok(
+    output.includes("## Comments\nUse this on the path."),
+    `expected preserved comment text in output, got:\n${output}`
+  );
+});
+
 // ─── Always runs ──────────────────────────────────────────────────────────────
 
 test("inspect() on a non-existent file rejects with an error", async () => {

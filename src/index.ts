@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, basename, dirname, join } from "node:path";
 import { createRequire } from "node:module";
 import { inspect } from "./inspector.js";
@@ -29,6 +29,16 @@ Examples:
 `);
 }
 
+function readExistingComments(mdPath: string): string | undefined {
+  if (!existsSync(mdPath)) return undefined;
+  const content = readFileSync(mdPath, "utf-8");
+  const marker = "## Comments";
+  const idx = content.indexOf(marker);
+  if (idx === -1) return undefined;
+  // Return everything after "## Comments" — the newline and any content the user wrote
+  return content.slice(idx + marker.length);
+}
+
 async function inspectOne(
   rivPath: string,
   outputPath: string | null,
@@ -49,7 +59,8 @@ async function inspectOne(
     : join(dirname(fullPath), `${basename(fullPath, ".riv")}.md`);
 
   const metadata = await inspect(fullPath);
-  const markdown = format(metadata);
+  const existingComments = toStdout ? undefined : readExistingComments(resolvedOutput);
+  const markdown = format(metadata, existingComments);
 
   if (toStdout) {
     process.stdout.write(markdown);
