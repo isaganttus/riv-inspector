@@ -83,6 +83,9 @@ riv-inspector path/to/file.riv --output path/to/output.md
 # Print to stdout instead of writing a file
 riv-inspector path/to/file.riv --stdout
 
+# Add a web preview link to the frontmatter
+riv-inspector path/to/file.riv --web-preview https://rive.app/community/files/123
+
 # Inspect multiple files at once
 riv-inspector a.riv b.riv c.riv
 
@@ -98,6 +101,7 @@ riv-inspector --version
 |---|---|---|
 | `--output <path>` | `-o` | Output path (single file only) |
 | `--stdout` | `-s` | Print to stdout instead of writing a file (single file only) |
+| `--web-preview <url>` | `-w` | Add a `webPreview` URL to the YAML frontmatter (single file only) |
 | `--version` | `-v` | Print version and exit |
 | `--help` | `-h` | Show help message |
 
