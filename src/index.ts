@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { existsSync, writeFileSync } from "node:fs";
 import { resolve, basename, dirname, join } from "node:path";
 import { createRequire } from "node:module";
