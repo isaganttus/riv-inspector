@@ -4,7 +4,7 @@ What can be read from a `.riv` file via the `@rive-app/canvas-advanced` WASM run
 
 ---
 
-## Currently extracted by riv-inspect
+## Currently extracted by rive-inspector
 
 ### Artboard
 
@@ -49,7 +49,7 @@ Collected via `CustomFileAssetLoader` as the file loads. Each asset fires the ca
 
 ## Accessible but not yet extracted
 
-These fields are available in the WASM API and could be added to riv-inspect.
+These fields are available in the WASM API and could be added to rive-inspector.
 
 ### Artboard — additional fields
 

@@ -1,5 +1,5 @@
 {
-  "name": "riv-inspect",
+  "name": "rive-inspector",
   "version": "0.1.0",
   "description": "Extract metadata from .riv files as Markdown with YAML frontmatter",
   "author": "Isa Ganttus",
@@ -14,15 +14,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/isaganttus/riv-inspector.git"
+    "url": "https://github.com/isaganttus/rive-inspectoror.git"
   },
   "bugs": {
-    "url": "https://github.com/isaganttus/riv-inspector/issues"
+    "url": "https://github.com/isaganttus/rive-inspectoror/issues"
   },
-  "homepage": "https://github.com/isaganttus/riv-inspector#readme",
+  "homepage": "https://github.com/isaganttus/rive-inspectoror#readme",
   "type": "module",
   "bin": {
-    "riv-inspect": "./dist/index.js"
+    "rive-inspector": "./dist/index.js"
   },
   "files": [
     "dist",
