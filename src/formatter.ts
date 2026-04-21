@@ -103,5 +103,5 @@ function buildYamlFrontmatter(meta: RivMetadata): string {
 }
 
 export function format(meta: RivMetadata): string {
-  return buildYamlFrontmatter(meta) + "\n";
+  return buildYamlFrontmatter(meta) + "\n\n## Comments\n";
 }
