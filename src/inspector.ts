@@ -196,6 +196,10 @@ export async function inspect(rivFilePath: string): Promise<RivMetadata> {
     let originX = 0;
     let originY = 0;
     try {
+      // Disable frameOrigin so bounds reflects the actual origin offset.
+      // The WASM runtime defaults frameOrigin to true regardless of the file,
+      // which forces minX/minY to 0 and hides the real origin position.
+      artboard.frameOrigin = false;
       // bounds gives AABB: { minX, minY, maxX, maxY }
       const bounds = artboard.bounds;
       width = Math.round(bounds.maxX - bounds.minX);
