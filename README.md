@@ -1,5 +1,8 @@
 # riv-inspector
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/isaganttus/riv-inspector/actions/workflows/ci.yml/badge.svg)](https://github.com/isaganttus/riv-inspector/actions/workflows/ci.yml)
+
 Extract metadata from `.riv` files and write it as Markdown with YAML frontmatter.
 
 ```
@@ -71,7 +74,7 @@ npm install -g .
 ## Usage
 
 ```bash
-# Inspect a single .riv file — output defaults to <file>.riv.md next to the input
+# Inspect a single .riv file — output defaults to <file>.md next to the input
 npm run dev -- path/to/file.riv
 
 # Or using the compiled binary
@@ -185,12 +188,9 @@ test/
 
 ## Contributing
 
-1. Fork and clone the repo
-2. `npm install`
-3. Make your changes in `src/`
-4. `npm test` to verify
-5. `npm run typecheck` to check types
-6. Open a pull request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, test instructions, and PR guidelines.
+
+Please note that this project follows a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you agree to uphold it.
 
 ---
 
