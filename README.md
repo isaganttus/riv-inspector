@@ -54,17 +54,24 @@ assets:
 
 ## Installation
 
+**From npm (recommended):**
+
+```bash
+npm install -g riv-inspector
+```
+
+Or run without installing:
+
+```bash
+npx riv-inspector file.riv
+```
+
+**From source:**
+
 ```bash
 git clone https://github.com/isaganttus/riv-inspector.git
 cd riv-inspector
 npm install
-```
-
-No manual build step needed for development — `npm run dev` runs the TypeScript source directly.
-
-To install the compiled binary globally:
-
-```bash
 npm run build
 npm install -g .
 ```
@@ -86,6 +93,18 @@ riv-inspector path/to/file.riv --output path/to/output.md
 # Print to stdout instead of writing a file
 riv-inspector path/to/file.riv --stdout
 
+# Output JSON to stdout
+riv-inspector path/to/file.riv --json
+
+# Pipe JSON to jq
+riv-inspector path/to/file.riv --json | jq '.artboards'
+
+# Output a JSON array for multiple files
+riv-inspector a.riv b.riv --json
+
+# Watch for changes and re-inspect automatically
+riv-inspector path/to/file.riv --watch
+
 # Add a web preview link to the frontmatter
 riv-inspector path/to/file.riv --web-preview https://rive.app/community/files/123
 
@@ -106,7 +125,9 @@ riv-inspector --version
 | Flag | Alias | Description |
 |---|---|---|
 | `--output <path>` | `-o` | Output path (single file only) |
-| `--stdout` | `-s` | Print to stdout instead of writing a file (single file only) |
+| `--stdout` | `-s` | Print Markdown to stdout instead of writing a file (single file only) |
+| `--json` | `-j` | Print JSON to stdout; multiple files output a JSON array |
+| `--watch` | | Re-inspect on file changes and update output (single file only) |
 | `--web-preview <url>` | `-w` | Add a `webPreview` URL to the YAML frontmatter (single file only) |
 | `--editor-link <url>` | `-e` | Add an `editorLink` URL to the YAML frontmatter (single file only) |
 | `--version` | `-v` | Print version and exit |
