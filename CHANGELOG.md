@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0] - 2026-04-22
+
+### Features
+
+- Folder support: positional args can now be directories; all `.riv` files inside are discovered recursively
+- `--watch` now works with folders and multiple paths, using per-file debouncing
+- `riv-inspector --init-config` creates a `.riv-inspector.json` config file
+- `riv-inspector --watch` with no paths reads the config and watches all listed paths
+- `--json` one-shot now works with folders (outputs a JSON array)
+- `.riv-inspector.json` is gitignored by default
+
+### Notes
+
+- No new runtime dependencies
+- `--output`, `--stdout`, `--web-preview`, `--editor-link` remain single-file only; clear errors when misused with folders
+
+---
+
 ## [0.1.0] - 2026-04-22
 
 Initial release.

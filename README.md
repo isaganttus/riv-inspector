@@ -102,8 +102,21 @@ riv-inspector path/to/file.riv --json | jq '.artboards'
 # Output a JSON array for multiple files
 riv-inspector a.riv b.riv --json
 
-# Watch for changes and re-inspect automatically
+# Watch a single file for changes
 riv-inspector path/to/file.riv --watch
+
+# Inspect all .riv files in a folder
+riv-inspector ./assets/
+
+# Inspect all .riv files in a folder as a JSON array
+riv-inspector ./assets/ --json
+
+# Watch an entire folder for changes
+riv-inspector ./assets/ --watch
+
+# Create a config file and watch using it
+riv-inspector --init-config
+riv-inspector --watch
 
 # Add a web preview link to the frontmatter
 riv-inspector path/to/file.riv --web-preview https://rive.app/community/files/123
@@ -127,7 +140,8 @@ riv-inspector --version
 | `--output <path>` | `-o` | Output path (single file only) |
 | `--stdout` | `-s` | Print Markdown to stdout instead of writing a file (single file only) |
 | `--json` | `-j` | Print JSON to stdout; multiple files output a JSON array |
-| `--watch` | | Re-inspect on file changes and update output (single file only) |
+| `--watch` | | Re-inspect on file/folder changes; reads config if no paths given |
+| `--init-config` | | Create a starter `.riv-inspector.json` in the current directory |
 | `--web-preview <url>` | `-w` | Add a `webPreview` URL to the YAML frontmatter (single file only) |
 | `--editor-link <url>` | `-e` | Add an `editorLink` URL to the YAML frontmatter (single file only) |
 | `--version` | `-v` | Print version and exit |
@@ -186,6 +200,20 @@ npm run typecheck           # Type-check without emitting
 
 ---
 
+## Config file
+
+`riv-inspector --init-config` creates a `.riv-inspector.json` in the current directory:
+
+```json
+{
+  "watch": ["./"]
+}
+```
+
+Run `riv-inspector --watch` with no positional arguments to watch all paths listed in the config. Paths are relative to where you run the command. The config file is gitignored by default.
+
+---
+
 ## How it works
 
 The WASM runtime from `@rive-app/canvas-advanced` is loaded in Node.js with a minimal browser-global polyfill (no canvas, no WebGL). The `.riv` binary is parsed entirely in memory by the Rive C++ runtime compiled to WASM. No network requests are made.
@@ -197,6 +225,7 @@ The WASM runtime from `@rive-app/canvas-advanced` is loaded in Node.js with a mi
 ```
 src/
   index.ts       CLI entry point — argument parsing and file I/O
+  config.ts      Config file loading (.riv-inspector.json)
   inspector.ts   Loads the Rive WASM runtime and extracts metadata
   formatter.ts   Serialises RivMetadata to Markdown/YAML frontmatter
 test/

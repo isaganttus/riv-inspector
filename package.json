@@ -1,6 +1,6 @@
 {
   "name": "riv-inspector",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Extract metadata from .riv files as Markdown with YAML frontmatter",
   "author": "Isa Ganttus",
   "license": "MIT",
