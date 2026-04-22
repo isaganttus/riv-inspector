@@ -97,12 +97,24 @@ async function main() {
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--output" || args[i] === "-o") {
+      if (i + 1 >= args.length || args[i + 1].startsWith("-")) {
+        console.error("Error: --output requires a value.");
+        process.exit(1);
+      }
       outputPath = args[++i];
     } else if (args[i] === "--stdout" || args[i] === "-s") {
       toStdout = true;
     } else if (args[i] === "--web-preview" || args[i] === "-w") {
+      if (i + 1 >= args.length || args[i + 1].startsWith("-")) {
+        console.error("Error: --web-preview requires a value.");
+        process.exit(1);
+      }
       webPreview = args[++i];
     } else if (args[i] === "--editor-link" || args[i] === "-e") {
+      if (i + 1 >= args.length || args[i + 1].startsWith("-")) {
+        console.error("Error: --editor-link requires a value.");
+        process.exit(1);
+      }
       editorLink = args[++i];
     } else if (!args[i].startsWith("-")) {
       rivPaths.push(args[i]);
