@@ -293,7 +293,11 @@ export async function inspect(rivFilePath: string): Promise<RivMetadata> {
     artboards,
     viewModels,
     enums: enumsMeta,
-    assets,
+    assets: {
+      images: [...new Set(assets.images)],
+      fonts: [...new Set(assets.fonts)],
+      audio: [...new Set(assets.audio)],
+    },
   };
 
   // Cleanup — wrap in try/catch since WASM cleanup can fail in headless Node
