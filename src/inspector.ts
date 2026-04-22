@@ -93,30 +93,18 @@ export async function inspect(rivFilePath: string): Promise<RivMetadata> {
   const originalErr = console.error;
   const originalWarn = console.warn;
   const originalLog = console.log;
-  const suppress = (...args: any[]) => {
+  const isWasmNoise = (args: any[]) => {
     const msg = args.join(" ");
-    if (
+    return (
       msg.includes("No WebGL") ||
       msg.includes("Aborted") ||
       msg.includes("SyncState") ||
       msg.includes("Image mesh")
-    ) return;
-    originalErr(...args);
+    );
   };
-  console.error = suppress;
-  console.warn = suppress;
-  // Also suppress console.log for WASM noise
-  const suppressLog = (...args: any[]) => {
-    const msg = args.join(" ");
-    if (
-      msg.includes("No WebGL") ||
-      msg.includes("Aborted") ||
-      msg.includes("SyncState") ||
-      msg.includes("Image mesh")
-    ) return;
-    originalLog(...args);
-  };
-  console.log = suppressLog;
+  console.error = (...args: any[]) => { if (!isWasmNoise(args)) originalErr(...args); };
+  console.warn = (...args: any[]) => { if (!isWasmNoise(args)) originalWarn(...args); };
+  console.log = (...args: any[]) => { if (!isWasmNoise(args)) originalLog(...args); };
 
   try {
   // Load the WASM runtime
