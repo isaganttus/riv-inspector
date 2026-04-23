@@ -15,6 +15,8 @@ riv-inspector <file.riv> [file2.riv ...] [options]
 
 Reads a Rive file without a browser and outputs a `.md` file containing structured YAML describing the file's artboards, state machines, view models, data enums, and assets. Useful for documentation, code generation, or keeping a record of what's inside a `.riv` file.
 
+![riv-inspector demo](.github/images/demo.gif)
+
 Example output:
 
 ```yaml
