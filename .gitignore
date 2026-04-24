@@ -1,4 +1,6 @@
 node_modules/
 dist/
 test/fixtures/*.riv
+test/fixtures/*.md
 .riv-inspector.json
+MEMORY.md
