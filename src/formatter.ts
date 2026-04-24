@@ -40,7 +40,7 @@ function buildYamlFrontmatter(meta: RivMetadata, webPreview?: string, editorLink
   if (webPreview) lines.push(`webPreview: ${yamlString(webPreview)}`);
   if (editorLink) lines.push(`editorLink: ${yamlString(editorLink)}`);
   if (meta.fileId !== null) lines.push(`fileId: ${meta.fileId}`);
-  if (meta.format) lines.push(`format: "${meta.format}"`);
+  if (meta.format) lines.push(`format: ${yamlString(meta.format)}`);
 
   // Artboards
   if (meta.artboards.length > 0) {
