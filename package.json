@@ -30,20 +30,27 @@
     "LICENSE"
   ],
   "scripts": {
+    "check": "biome check .",
+    "check:write": "biome check --write .",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "node --import tsx/esm --test test/inspector.test.ts",
+    "test": "node --import tsx/esm --test test/cli.test.ts test/inspector.test.ts",
     "typecheck": "tsc --noEmit",
+    "pack:dry-run": "npm --cache .npm-cache pack --dry-run",
     "prepublishOnly": "npm run build"
   },
   "engines": {
     "node": ">=22.6.0"
   },
   "dependencies": {
-    "@rive-app/canvas-advanced": "^2.37.3"
+    "@rive-app/canvas-advanced": "^2.37.3",
+    "yaml": "^2.8.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.14",
     "@types/node": "^25.6.0",
     "tsx": "^4.19.2",
     "typescript": "^6.0.2"

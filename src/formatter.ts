@@ -1,84 +1,49 @@
-import type { RivMetadata, ArtboardMeta, ViewModelMeta, PropertyMeta } from "./inspector.js";
+import YAML from "yaml";
+import type { PropertyMeta, RivMetadata } from "./inspector.js";
 
-/**
- * Quote a YAML scalar value if it contains characters that would break YAML parsing
- * or allow content injection (colons, hashes, brackets, newlines, etc.).
- */
-function yamlString(value: string): string {
-  // Safe: only word chars, spaces, hyphens, dots, forward slashes, parentheses
-  if (/^[\w\s\-\./()]+$/.test(value)) return value;
-  // Escape backslashes, double quotes, and control characters, then wrap in double quotes
-  const escaped = value
-    .replace(/\\/g, "\\\\")
-    .replace(/"/g, '\\"')
-    .replace(/\n/g, "\\n")
-    .replace(/\r/g, "\\r")
-    .replace(/\t/g, "\\t");
-  return `"${escaped}"`;
-}
+function buildYamlFrontmatter(
+  meta: RivMetadata,
+  webPreview?: string,
+  editorLink?: string,
+): string {
+  const frontmatter: Record<string, unknown> = {
+    file: meta.file,
+  };
 
-/**
- * Serialize a string array as a YAML flow sequence.
- * Each element is individually escaped.
- */
-function yamlArray(items: string[]): string {
-  if (items.length === 0) return "[]";
-  return `[${items.map(yamlString).join(", ")}]`;
-}
-
-function yamlPropLine(prop: PropertyMeta): string {
-  let line = `{ name: ${yamlString(prop.name)}, type: ${yamlString(prop.type)}`;
-  if (prop.enum) line += `, enum: ${yamlString(prop.enum)}`;
-  line += " }";
-  return line;
-}
-
-function buildYamlFrontmatter(meta: RivMetadata, webPreview?: string, editorLink?: string): string {
-  const lines: string[] = ["---"];
-
-  lines.push(`file: ${yamlString(meta.file)}`);
-  if (webPreview) lines.push(`webPreview: ${yamlString(webPreview)}`);
-  if (editorLink) lines.push(`editorLink: ${yamlString(editorLink)}`);
-  if (meta.fileId !== null) lines.push(`fileId: ${meta.fileId}`);
-  if (meta.format) lines.push(`format: ${yamlString(meta.format)}`);
+  if (webPreview) frontmatter.webPreview = webPreview;
+  if (editorLink) frontmatter.editorLink = editorLink;
+  if (meta.fileId !== null) frontmatter.fileId = meta.fileId;
+  if (meta.format) frontmatter.format = meta.format;
 
   // Artboards
   if (meta.artboards.length > 0) {
-    lines.push("artboards:");
-    for (const ab of meta.artboards) {
-      lines.push(`  - name: ${yamlString(ab.name)}`);
-      lines.push(`    size: ${yamlArray(ab.size.map(String))}`);
-      lines.push(`    origin: ${yamlArray(ab.origin.map(String))}`);
-      if (ab.stateMachines.length > 0) {
-        lines.push(`    stateMachines: ${yamlArray(ab.stateMachines)}`);
-      }
-    }
+    frontmatter.artboards = meta.artboards.map((ab) => ({
+      name: ab.name,
+      size: ab.size,
+      origin: ab.origin,
+      ...(ab.stateMachines.length > 0
+        ? { stateMachines: ab.stateMachines }
+        : {}),
+    }));
   }
 
   // View Models
   if (meta.viewModels.length > 0) {
-    lines.push("viewModels:");
-    for (const vm of meta.viewModels) {
-      lines.push(`  - name: ${yamlString(vm.name)}`);
-      if (vm.properties.length > 0) {
-        lines.push("    properties:");
-        for (const prop of vm.properties) {
-          lines.push(`      - ${yamlPropLine(prop)}`);
-        }
-      }
-      if (vm.instances.length > 0) {
-        lines.push(`    instances: ${yamlArray(vm.instances)}`);
-      }
-    }
+    frontmatter.viewModels = meta.viewModels.map((vm) => ({
+      name: vm.name,
+      ...(vm.properties.length > 0
+        ? { properties: vm.properties.map((prop) => yamlProperty(prop)) }
+        : {}),
+      ...(vm.instances.length > 0 ? { instances: vm.instances } : {}),
+    }));
   }
 
   // Enums
   if (meta.enums.length > 0) {
-    lines.push("enums:");
-    for (const e of meta.enums) {
-      lines.push(`  - name: ${yamlString(e.name)}`);
-      lines.push(`    values: ${yamlArray(e.values)}`);
-    }
+    frontmatter.enums = meta.enums.map((e) => ({
+      name: e.name,
+      values: e.values,
+    }));
   }
 
   // Assets
@@ -88,20 +53,26 @@ function buildYamlFrontmatter(meta: RivMetadata, webPreview?: string, editorLink
     meta.assets.audio.length > 0;
 
   if (hasAssets) {
-    lines.push("assets:");
+    const assets: Partial<RivMetadata["assets"]> = {};
     if (meta.assets.images.length > 0) {
-      lines.push(`  images: ${yamlArray(meta.assets.images)}`);
+      assets.images = meta.assets.images;
     }
     if (meta.assets.fonts.length > 0) {
-      lines.push(`  fonts: ${yamlArray(meta.assets.fonts)}`);
+      assets.fonts = meta.assets.fonts;
     }
     if (meta.assets.audio.length > 0) {
-      lines.push(`  audio: ${yamlArray(meta.assets.audio)}`);
+      assets.audio = meta.assets.audio;
     }
+    frontmatter.assets = assets;
   }
 
-  lines.push("---");
-  return lines.join("\n");
+  return `---\n${YAML.stringify(frontmatter, { lineWidth: 0 }).trimEnd()}\n---`;
+}
+
+function yamlProperty(prop: PropertyMeta): PropertyMeta {
+  return prop.enum
+    ? { name: prop.name, type: prop.type, enum: prop.enum }
+    : { name: prop.name, type: prop.type };
 }
 
 export interface FormatOptions {
@@ -116,5 +87,5 @@ export function format(meta: RivMetadata, options?: FormatOptions): string {
     existingComments !== undefined
       ? `## Comments${existingComments}`
       : "## Comments\n";
-  return buildYamlFrontmatter(meta, webPreview, editorLink) + "\n\n" + commentsSection;
+  return `${buildYamlFrontmatter(meta, webPreview, editorLink)}\n\n${commentsSection}`;
 }
