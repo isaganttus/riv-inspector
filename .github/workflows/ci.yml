@@ -21,6 +21,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Check formatting and lint
+        run: npm run check
+
       - name: Type check
         run: npm run typecheck
 
@@ -29,3 +32,6 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Package dry run
+        run: npm run pack:dry-run

@@ -24,8 +24,13 @@ export function loadConfig(cwd = process.cwd()): RivInspectorConfig | null {
 
   const obj = raw as Record<string, unknown>;
 
-  if (!Array.isArray(obj.watch) || !obj.watch.every((p) => typeof p === "string")) {
-    throw new Error(`${CONFIG_FILENAME}: "watch" must be an array of path strings`);
+  if (
+    !Array.isArray(obj.watch) ||
+    !obj.watch.every((p) => typeof p === "string")
+  ) {
+    throw new Error(
+      `${CONFIG_FILENAME}: "watch" must be an array of path strings`,
+    );
   }
 
   return { watch: obj.watch as string[] };

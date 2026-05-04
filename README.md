@@ -24,25 +24,44 @@ Example output:
 file: animation.riv
 artboards:
   - name: Main
-    size: [732, 755]
-    origin: [0, 0]
-    stateMachines: [sm-main]
+    size:
+      - 732
+      - 755
+    origin:
+      - 0
+      - 0
+    stateMachines:
+      - sm-main
   - name: Button
-    size: [200, 60]
-    origin: [100, 30]
-    stateMachines: [State Machine 1]
+    size:
+      - 200
+      - 60
+    origin:
+      - 100
+      - 30
+    stateMachines:
+      - State Machine 1
 viewModels:
   - name: Main
     properties:
-      - { name: isValid, type: boolean }
-      - { name: states, type: enum, enum: States }
-    instances: [Instance]
+      - name: isValid
+        type: boolean
+      - name: states
+        type: enum
+        enum: States
+    instances:
+      - Instance
 enums:
   - name: States
-    values: [idle, active, done]
+    values:
+      - idle
+      - active
+      - done
 assets:
-  images: [avatar.png]
-  fonts: [Inter.ttf]
+  images:
+    - avatar.png
+  fonts:
+    - Inter.ttf
 ---
 ```
 
@@ -195,9 +214,13 @@ Property types mirror the Rive `DataType` enum: `boolean`, `number`, `string`, `
 
 ```bash
 npm run dev -- file.riv     # Run from source
+npm run check                # Run Biome formatting/lint/import checks
+npm run check:write          # Apply Biome safe fixes
+npm run format               # Format supported files with Biome
 npm run build               # Compile TypeScript to dist/
 npm test                    # Run tests
 npm run typecheck           # Type-check without emitting
+npm run pack:dry-run         # Verify npm package contents
 ```
 
 ---
@@ -227,6 +250,7 @@ The WASM runtime from `@rive-app/canvas-advanced` is loaded in Node.js with a mi
 ```
 src/
   index.ts       CLI entry point — argument parsing and file I/O
+  cli.ts         Pure CLI argument parser
   config.ts      Config file loading (.riv-inspector.json)
   inspector.ts   Loads the Rive WASM runtime and extracts metadata
   formatter.ts   Serialises RivMetadata to Markdown/YAML frontmatter

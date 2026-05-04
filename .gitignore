@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.npm-cache/
 test/fixtures/*.md
 .riv-inspector.json
 MEMORY.md
